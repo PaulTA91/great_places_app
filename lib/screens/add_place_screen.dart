@@ -24,41 +24,44 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       backgroundColor: Theme.of(context).colorScheme.secondary,
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Add a new Place"),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: InputDecoration(
-                        label: Text("Title"),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Add a new Place"),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                          label: Text("Title"),
+                        ),
+                        controller: _titleController,
                       ),
-                      controller: _titleController,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    ImageInput(),
-                  ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ImageInput(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.add),
-            label: Text("Add Place"),
-            style: style,
-          )
-        ],
+            ElevatedButton.icon(
+              onPressed: () {},
+              icon: Icon(Icons.add),
+              label: Text("Add Place"),
+              style: style,
+            )
+          ],
+        ),
       ),
     );
   }
