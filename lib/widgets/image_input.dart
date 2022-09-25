@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ImageInput extends StatefulWidget {
   final Function onSelectImage;
@@ -18,19 +19,30 @@ class _ImageInputState extends State<ImageInput> {
   File _storedImage;
 
   Future<void> _takePicture() async {
-    final picker = ImagePicker();
-    final imageFile = await picker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 600,
-    );
-    setState(() {
-      _storedImage = File(imageFile.path);
-    });
-    final appDirectory = await syspaths.getApplicationDocumentsDirectory();
-    final fileName = path.basename(_storedImage.path);
-    final savedImage =
-        await _storedImage.copy('${appDirectory.path}/${fileName}');
-    widget.onSelectImage(savedImage);
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+      Permission.camera,
+    ].request();
+
+    if (await Permission.storage.request().isGranted &&
+        await Permission.camera.request().isGranted) {
+      final picker = ImagePicker();
+      final imageFile = await picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 600,
+      );
+      if (imageFile == null) {
+        return;
+      }
+      setState(() {
+        _storedImage = File(imageFile.path);
+      });
+      final appDirectory = await syspaths.getApplicationDocumentsDirectory();
+      final fileName = path.basename(_storedImage.path);
+      final savedImage =
+          await _storedImage.copy('${appDirectory.path}/${fileName}');
+      widget.onSelectImage(savedImage);
+    }
   }
 
   @override
