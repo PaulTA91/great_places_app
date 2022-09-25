@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/image_input.dart';
+import '../providers/great_places.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   static const routename = "/add-place";
@@ -15,6 +19,8 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    File _pickedImage;
+
     final ButtonStyle style = ElevatedButton.styleFrom(
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       elevation: 0,
@@ -23,6 +29,19 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.secondary,
     );
+
+    void _selectImage(File pickedImage) {
+      _pickedImage = pickedImage;
+    }
+
+    void _savedPlace() {
+      if (_titleController.text.isEmpty || _pickedImage == null) {
+        return;
+      }
+      Provider.of<GreatPlaces>(context, listen: false)
+          .addPlace(_titleController.text, _pickedImage);
+      Navigator.of(context).pop();
+    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -48,14 +67,14 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      ImageInput(),
+                      ImageInput(_selectImage),
                     ],
                   ),
                 ),
               ),
             ),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: _savedPlace,
               icon: Icon(Icons.add),
               label: Text("Add Place"),
               style: style,
