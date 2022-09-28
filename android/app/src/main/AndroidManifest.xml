@@ -8,9 +8,13 @@
     <!-- Permissions options for the `camera` group -->
     <uses-permission android:name="android.permission.CAMERA"/>
    <application
+   
         android:label="great_places_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCURhDMFzk2H8UmPDq1nuOPyJcmIwaSANA"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -40,5 +44,4 @@
             
     </application>
 </manifest>
-<!-- android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCURhDMFzk2H8UmPDq1nuOPyJcmIwaSANA" -->
+<!--  -->
