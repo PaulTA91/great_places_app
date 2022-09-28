@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart' as syspaths;
@@ -19,10 +21,10 @@ class _ImageInputState extends State<ImageInput> {
   File _storedImage;
 
   Future<void> _takePicture() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.storage,
-      Permission.camera,
-    ].request();
+    // Map<Permission, PermissionStatus> statuses = await [
+    //   Permission.storage,
+    //   Permission.camera,
+    // ].request();
 
     if (await Permission.storage.request().isGranted &&
         await Permission.camera.request().isGranted) {
