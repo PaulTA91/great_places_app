@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../widgets/image_input.dart';
 import '../widgets/location_input.dart';
 import '../providers/great_places.dart';
+import '../models/place.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   static const routename = "/add-place";
@@ -17,11 +18,30 @@ class AddPlaceScreen extends StatefulWidget {
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  File _pickedImage;
+  PlaceLocation _pickedLocation;
+
+  void _selectImage(File pickedImage) {
+    _pickedImage = pickedImage;
+  }
+
+  void _selectPlace(double lat, double lng) {
+    _pickedLocation = PlaceLocation(latitude: lat, longitude: lng);
+  }
+
+  void _savedPlace() {
+    if (_titleController.text.isEmpty ||
+        _pickedImage == null ||
+        _pickedLocation == null) {
+      return;
+    }
+    Provider.of<GreatPlaces>(context, listen: false)
+        .addPlace(_titleController.text, _pickedImage, _pickedLocation);
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
-    File _pickedImage;
-
     final ButtonStyle style = ElevatedButton.styleFrom(
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       elevation: 0,
@@ -30,19 +50,6 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       ),
       backgroundColor: Theme.of(context).colorScheme.secondary,
     );
-
-    void _selectImage(File pickedImage) {
-      _pickedImage = pickedImage;
-    }
-
-    void _savedPlace() {
-      if (_titleController.text.isEmpty || _pickedImage == null) {
-        return;
-      }
-      Provider.of<GreatPlaces>(context, listen: false)
-          .addPlace(_titleController.text, _pickedImage);
-      Navigator.of(context).pop();
-    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -72,7 +79,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      LocationInput(),
+                      LocationInput(_selectPlace),
                     ],
                   ),
                 ),
